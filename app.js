@@ -20,7 +20,11 @@ config.slides.forEach(function(slide, i) {
     let elemDiv = document.createElement("div");
     elemDiv.className = 'bg';
     elemDiv.id = 'slide' + i;
-    elemDiv.style.backgroundImage = 'url("images/' + slide.bgImage + '")';
+    let img = new Image();
+    img.onload = function() {
+        elemDiv.style.backgroundImage = 'url(' + this.src + ')';
+    }
+    img.src = 'images/' + slide.bgImage;
     elemDiv.style.display = 'none';
     document.body.appendChild(elemDiv);
 });
