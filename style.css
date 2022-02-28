@@ -8,10 +8,10 @@ body {
     
 }
 
-#bg {
+.bg {
     width: 100%;
     height: 100%;
-    background-image: url("images/avalie_google.png");
-    transition: background-image 1s;
+    /* background-image: url("images/avalie_google.png"); */
+    /* transition: background-image 1s; */
 }
 
