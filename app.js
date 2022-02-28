@@ -16,15 +16,36 @@ var config = {
     ]
 }
 
+function imageIsLoaded(url){
+    return new Promise(function(resolve, reject){
+        var img = new Image();
+        try {
+            img.addEventListener('load', function() {
+                resolve (true);
+            }, false);
+            img.addEventListener('error', function() {
+                resolve (false);
+            }, false);      
+        }
+        catch(error) {
+            resolve (false);
+        }
+        img.src = url;
+    });        
+}
+
 config.slides.forEach(function(slide, i) {
     let elemDiv = document.createElement("div");
     elemDiv.className = 'bg';
     elemDiv.id = 'slide' + i;
-    let img = new Image();
-    img.onload = function() {
-        elemDiv.style.backgroundImage = 'url(' + this.src + ')';
-    }
-    img.src = 'images/' + slide.bgImage;
+    // let img = new Image();
+    // img.onload = function() {
+    //     elemDiv.style.backgroundImage = 'url(' + this.src + ')';
+    // }
+    // img.src = 'images/' + slide.bgImage;
+    imageIsLoaded('images/' + slide.bgImage).then(function(value) {
+        elemDiv.style.backgroundImage = 'url("images/' + slide.bgImage + '")';
+    });
     elemDiv.style.display = 'none';
     document.body.appendChild(elemDiv);
 });
