@@ -74,4 +74,4 @@ setInterval(f => {
     currentSlide = nextSlide;
     console.log(currentSlide);
     console.log(nextSlide);
-}, 5000);
+}, 30000);
