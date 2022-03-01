@@ -39,10 +39,10 @@ config.slides.forEach(function(slide, i) {
     let elemImg = document.createElement("img");
     elemImg.src = 'images/' + slide.bgImage;
 
-    elemImg.style.width = '1px';
-    elemImg.style.height = '1px';
-
-    //elemImg.style.display = 'none';
+    // elemImg.style.width = '1px';
+    // elemImg.style.height = '1px';
+    elemImg.style.display = 'none';
+    
     document.body.appendChild(elemImg);
     elemDiv.className = 'bg';
     elemDiv.id = 'slide' + i;
@@ -74,4 +74,4 @@ setInterval(f => {
     currentSlide = nextSlide;
     console.log(currentSlide);
     console.log(nextSlide);
-}, 30000);
+}, 15000);
