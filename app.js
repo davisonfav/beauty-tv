@@ -36,6 +36,14 @@ function imageIsLoaded(url){
 
 config.slides.forEach(function(slide, i) {
     let elemDiv = document.createElement("div");
+    let elemImg = document.createElement("img");
+    elemImg.src = 'images/' + slide.bgImage;
+
+    // elemImg.style.width = '1px';
+    // elemImg.style.height = '1px';
+
+    //elemImg.style.display = 'none';
+    elemDiv.appendChild(elemImg);
     elemDiv.className = 'bg';
     elemDiv.id = 'slide' + i;
     // let img = new Image();
@@ -43,9 +51,10 @@ config.slides.forEach(function(slide, i) {
     //     elemDiv.style.backgroundImage = 'url(' + this.src + ')';
     // }
     // img.src = 'images/' + slide.bgImage;
-    imageIsLoaded('images/' + slide.bgImage).then(function(value) {
-        elemDiv.style.backgroundImage = 'url("images/' + slide.bgImage + '")';
-    });
+    // imageIsLoaded('images/' + slide.bgImage).then(function(value) {
+    //     elemDiv.style.backgroundImage = 'url("images/' + slide.bgImage + '")';
+    // });
+    //elemDiv.style.backgroundImage = 'url("images/' + slide.bgImage + '")';
     elemDiv.style.display = 'none';
     document.body.appendChild(elemDiv);
 });
