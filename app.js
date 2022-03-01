@@ -39,11 +39,11 @@ config.slides.forEach(function(slide, i) {
     let elemImg = document.createElement("img");
     elemImg.src = 'images/' + slide.bgImage;
 
-    // elemImg.style.width = '1px';
-    // elemImg.style.height = '1px';
+    elemImg.style.width = '1px';
+    elemImg.style.height = '1px';
 
     //elemImg.style.display = 'none';
-    elemDiv.appendChild(elemImg);
+    document.body.appendChild(elemImg);
     elemDiv.className = 'bg';
     elemDiv.id = 'slide' + i;
     // let img = new Image();
@@ -54,7 +54,7 @@ config.slides.forEach(function(slide, i) {
     // imageIsLoaded('images/' + slide.bgImage).then(function(value) {
     //     elemDiv.style.backgroundImage = 'url("images/' + slide.bgImage + '")';
     // });
-    //elemDiv.style.backgroundImage = 'url("images/' + slide.bgImage + '")';
+    elemDiv.style.backgroundImage = 'url("images/' + slide.bgImage + '")';
     elemDiv.style.display = 'none';
     document.body.appendChild(elemDiv);
 });
