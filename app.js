@@ -1,12 +1,16 @@
+var IBGE_CITY_CODE = '3509502';
+
 var config = getConfig();
 var news = null;
+var weather = null;
 getData();
 
 function initSlides() {
 
     document.body.innerHTML = "";
+    let slideCount = 0;
 
-    config.slides.forEach(function(slide, i) {
+    config.slides.forEach(function(slide) {
         let elemDiv = document.createElement("div");
         let elemImg = document.createElement("img");
         elemImg.src = 'images/' + slide.bgImage;
@@ -14,7 +18,7 @@ function initSlides() {
         
         document.body.appendChild(elemImg);
         elemDiv.className = 'bg';
-        elemDiv.id = 'slide' + i;
+        elemDiv.id = 'slide' + slideCount;
 
         elemDiv.style.backgroundImage = 'url("images/' + slide.bgImage + '")';
         elemDiv.style.display = 'none';
@@ -22,7 +26,6 @@ function initSlides() {
         if (slide.type == 'news') {
 
             if (!news) {
-                console.log(news.news);
                 return;
             }
 
@@ -69,6 +72,34 @@ function initSlides() {
             elemDiv.appendChild(elemDivImage);
         }
 
+        if (slide.type == 'weather') {
+
+            if (!weather) {
+                return;
+            }
+
+            let dateToday = new Date().toLocaleDateString("pt-BR");
+            let periodToday = new Date().getHours() <= 15 ? 'tarde' : 'noite';
+            var weatherToday = weather['weather'][IBGE_CITY_CODE][dateToday][periodToday];
+
+            //se tipo de slide é clima, inclui o conteudo/imagem tambem
+            let elemImage = new Image();
+            elemImage.src = weatherToday.icone;
+            elemImage.className = 'weatherImage';
+            elemDiv.appendChild(elemImage);
+
+            let elemWeatherTodayMinMax = document.createElement("span");
+            elemWeatherTodayMinMax.className = 'weatherTodayMinMax';
+            elemWeatherTodayMinMax.textContent = 'MIN ' + weatherToday.temp_min + '° - MAX ' + weatherToday.temp_max + '°';
+            elemDiv.appendChild(elemWeatherTodayMinMax);
+
+            let elemWeatherTodayDescription = document.createElement("span");
+            elemWeatherTodayDescription.className = 'weatherTodayDescription';
+            elemWeatherTodayDescription.textContent = weatherToday.resumo + weatherToday.resumo + weatherToday.resumo;
+            elemDiv.appendChild(elemWeatherTodayDescription);
+        }
+
+        slideCount++;
         document.body.appendChild(elemDiv);
     });
 
@@ -78,7 +109,7 @@ function initSlides() {
     var intervalId = setInterval(f => {
 
         let nextSlide = currentSlide + 1;
-        if (nextSlide >= config.slides.length) {
+        if (nextSlide >= slideCount) {
             clearInterval(intervalId);
             getData();
         }
@@ -101,26 +132,62 @@ function randomNumber() {
     return { width: srcWidth*ratio, height: srcHeight*ratio };
  }
 
- function newsExpired(timestamp) {
+function newsExpired(timestamp) {
      return 120 <= Math.round(Math.abs(new Date().getTime() - timestamp) / (1000 * 60));
  }
 
+function weatherExpired(timestamp) {
+    let currentDate = new Date();
+    let lastRequestDate = new Date(timestamp);
+    return !(
+        currentDate.getDate() === lastRequestDate.getDate() &&
+        currentDate.getMonth() === lastRequestDate.getMonth() &&
+        currentDate.getFullYear === lastRequestDate.getFullYear);
+}
+
  function getData() {
 
+    let requests = [];
+    let requestsMap = new Map();
+    let requestIndex = 0;
+    
+    //busca as news se for o load inicial ou caso tenha expirado as noticias
     if (!news || newsExpired(news.timestamp)) {
-        fetch('https://gnews.io/api/v4/top-headlines?token=c6763eb88c52c398a1e42fd6e590d651&country=BR&lang=pt&max=10')
-        .then(response => response.json())
-        .then(result => {
+        requests.push(fetch('https://gnews.io/api/v4/top-headlines?token=c6763eb88c52c398a1e42fd6e590d651&country=BR&lang=pt&max=10'));
+        requestsMap.set('news', requestIndex);
+        requestIndex++;
+    }
+    
+    if (!weather || weatherExpired(weather.timestamp)) {
+        requests.push(fetch('https://apiprevmet3.inmet.gov.br/previsao/' + IBGE_CITY_CODE));
+        requestsMap.set('weather', requestIndex);
+        requestIndex++;
+    }
+
+    Promise.all(requests).then(responses =>
+        Promise.all(responses.map(response => response.json()))
+    ).then(data => {
+        if (requestsMap.has('news')) {
             news = {
                 "timestamp": new Date().getTime(),
-                "news": result.articles
+                "news": data[requestsMap.get('news')].articles
             };
-            initSlides();
-        });
-    }
-    else {
+        }
+
+        if (requestsMap.has('weather')) {
+            weather = {
+                "timestamp": new Date().getTime(),
+                "weather": data[requestsMap.get('weather')]
+            }
+        }
+
         initSlides();
-    }
+    }).catch(err =>
+        console.log(err)
+    );
+
+    if (requests.length == 0)
+        initSlides();
  }
 
 function getConfig() {
@@ -130,6 +197,10 @@ function getConfig() {
             {
                 "type": "image",
                 "bgImage": "avalie_google.png"
+            },
+            {
+                "type": "weather",
+                "bgImage": "clima_imagem.jpg"
             },
             {
                 "type": "image",
