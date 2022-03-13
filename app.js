@@ -71,32 +71,70 @@ function initSlides() {
             elemDiv.appendChild(elemDivText);
             elemDiv.appendChild(elemDivImage);
         }
-
-        if (slide.type == 'weather') {
+        else if (slide.type == 'weather') {
 
             if (!weather) {
                 return;
             }
 
             let dateToday = new Date().toLocaleDateString("pt-BR");
+            let dateTomorrow = new Date(new Date().getTime() + 86400000).toLocaleDateString("pt-BR");
             let periodToday = new Date().getHours() <= 15 ? 'tarde' : 'noite';
-            var weatherToday = weather['weather'][IBGE_CITY_CODE][dateToday][periodToday];
+            var weatherToday = weather['weather'][IBGE_CITY_CODE][dateToday];
+            var weatherTomorrow = weather['weather'][IBGE_CITY_CODE][dateTomorrow];
+            var edgeTempToday = getEdgeTemperaturesForDay(weatherToday);
+            var edgeTempTomorrow = getEdgeTemperaturesForDay(weatherTomorrow);
 
             //se tipo de slide é clima, inclui o conteudo/imagem tambem
             let elemImage = new Image();
-            elemImage.src = weatherToday.icone;
+            elemImage.src = weatherToday[periodToday].icone;
             elemImage.className = 'weatherImage';
             elemDiv.appendChild(elemImage);
 
             let elemWeatherTodayMinMax = document.createElement("span");
             elemWeatherTodayMinMax.className = 'weatherTodayMinMax';
-            elemWeatherTodayMinMax.textContent = 'MIN ' + weatherToday.temp_min + '° - MAX ' + weatherToday.temp_max + '°';
+            elemWeatherTodayMinMax.textContent = 'MIN ' + edgeTempToday.temp_min + '° - MAX ' + edgeTempToday.temp_max + '°';
             elemDiv.appendChild(elemWeatherTodayMinMax);
 
             let elemWeatherTodayDescription = document.createElement("span");
             elemWeatherTodayDescription.className = 'weatherTodayDescription';
-            elemWeatherTodayDescription.textContent = weatherToday.resumo + weatherToday.resumo + weatherToday.resumo;
+            elemWeatherTodayDescription.textContent = weatherToday[periodToday].resumo;
             elemDiv.appendChild(elemWeatherTodayDescription);
+
+            let elemWeatherTomorrowMinMax = document.createElement("span");
+            elemWeatherTomorrowMinMax.className = 'weatherTomorrowMinMax';
+            elemWeatherTomorrowMinMax.textContent = 'MIN ' + edgeTempTomorrow.temp_min + '° - MAX ' + edgeTempTomorrow.temp_max + '°';
+            elemDiv.appendChild(elemWeatherTomorrowMinMax);
+
+            let elemWeatherTomorrowMorning = document.createElement("span");
+            elemWeatherTomorrowMorning.className = 'weatherTomorrowMorning';
+            elemWeatherTomorrowMorning.textContent = weatherTomorrow['manha'].resumo;
+            elemDiv.appendChild(elemWeatherTomorrowMorning);
+
+            let elemWeatherTomorrowAfternoon = document.createElement("span");
+            elemWeatherTomorrowAfternoon.className = 'weatherTomorrowAfternoon';
+            elemWeatherTomorrowAfternoon.textContent = weatherTomorrow['tarde'].resumo;
+            elemDiv.appendChild(elemWeatherTomorrowAfternoon);
+
+            let elemWeatherTomorrowNight = document.createElement("span");
+            elemWeatherTomorrowNight.className = 'weatherTomorrowNight';
+            elemWeatherTomorrowNight.textContent = weatherTomorrow['noite'].resumo;
+            elemDiv.appendChild(elemWeatherTomorrowNight);
+
+        }
+        else if (slide.type == 'weather_week') {
+            
+            if (!weather) {
+                return;
+            }
+
+            let dateToday = new Date().toLocaleDateString("pt-BR");
+            let dateTomorrow = new Date(new Date().getTime() + 86400000).toLocaleDateString("pt-BR");
+            let periodToday = new Date().getHours() <= 15 ? 'tarde' : 'noite';
+            var weatherToday = weather['weather'][IBGE_CITY_CODE][dateToday];
+            var weatherTomorrow = weather['weather'][IBGE_CITY_CODE][dateTomorrow];
+            var edgeTempToday = getEdgeTemperaturesForDay(weatherToday);
+            var edgeTempTomorrow = getEdgeTemperaturesForDay(weatherTomorrow);
         }
 
         slideCount++;
@@ -119,6 +157,23 @@ function initSlides() {
             currentSlide = nextSlide;
         }
     }, config.speed * 1000);
+}
+
+function getEdgeTemperaturesForDay(data) {
+    var minTempList = [];
+    minTempList.push(data['manha'].temp_min);
+    minTempList.push(data['tarde'].temp_min);
+    minTempList.push(data['noite'].temp_min);
+
+    var maxTempList = [];
+    maxTempList.push(data['manha'].temp_max);
+    maxTempList.push(data['tarde'].temp_max);
+    maxTempList.push(data['noite'].temp_max);
+
+    return { 
+        temp_min: Math.min.apply(null, minTempList),
+        temp_max: Math.max.apply(null, maxTempList) 
+    };
 }
 
 function randomNumber() {
@@ -207,45 +262,45 @@ function getConfig() {
                 "bgImage": "spa_pes.png"
             },
             {
-                "type": "news",
-                "bgImage": "noticias_imagem.png"
+                "type": "weather_week",
+                "bgImage": "clima_semana_imagem.png"
+            },
+            {
+                "type": "image",
+                "bgImage": "alongamento_cilios.png"
             },
             // {
-            //     "type": "image",
-            //     "bgImage": "alongamento_cilios.png"
+            //     "type": "news",
+            //     "bgImage": "noticias_imagem.png"
             // },
+            {
+                "type": "image",
+                "bgImage": "bioseguranca.png"
+            },
+            {
+                "type": "image",
+                "bgImage": "fibra_vidro.png"
+            },
             // {
             //     "type": "news",
             //     "bgImage": "noticias_imagem.png"
             // },
-            // {
-            //     "type": "image",
-            //     "bgImage": "bioseguranca.png"
-            // },
-            // {
-            //     "type": "image",
-            //     "bgImage": "fibra_vidro.png"
-            // },
-            // {
-            //     "type": "news",
-            //     "bgImage": "noticias_imagem.png"
-            // },
-            // {
-            //     "type": "image",
-            //     "bgImage": "base_fortalecedora.png"
-            // },
-            // {
-            //     "type": "image",
-            //     "bgImage": "brow_lamination.png"
-            // },
+            {
+                "type": "image",
+                "bgImage": "base_fortalecedora.png"
+            },
+            {
+                "type": "image",
+                "bgImage": "brow_lamination.png"
+            },
             // {
             //     "type": "news",
             //     "bgImage": "noticias_imagem.png"
             // },
-            // {
-            //     "type": "image",
-            //     "bgImage": "promocoes.png"
-            // },
+            {
+                "type": "image",
+                "bgImage": "promocoes.png"
+            },
             // {
             //     "type": "image",
             //     "bgImage": "drenagem_linfatica.png"
