@@ -123,18 +123,44 @@ function initSlides() {
 
         }
         else if (slide.type == 'weather_week') {
-            
+
             if (!weather) {
                 return;
             }
 
-            let dateToday = new Date().toLocaleDateString("pt-BR");
-            let dateTomorrow = new Date(new Date().getTime() + 86400000).toLocaleDateString("pt-BR");
-            let periodToday = new Date().getHours() <= 15 ? 'tarde' : 'noite';
-            var weatherToday = weather['weather'][IBGE_CITY_CODE][dateToday];
-            var weatherTomorrow = weather['weather'][IBGE_CITY_CODE][dateTomorrow];
-            var edgeTempToday = getEdgeTemperaturesForDay(weatherToday);
-            var edgeTempTomorrow = getEdgeTemperaturesForDay(weatherTomorrow);
+            for (var i = 1; i <= 4; i++) {
+                let currentDate = new Date(new Date().getTime() + (86400000 * i)).toLocaleDateString("pt-BR");
+                let weatherCurrent = weather['weather'][IBGE_CITY_CODE][currentDate];
+                let edgeTemp;
+                let description;
+                if (i == 1) {
+                    edgeTemp = getEdgeTemperaturesForDay(weatherCurrent);
+                    description = truncateText(weatherCurrent['tarde'].resumo, 50);
+                }
+                else {
+                    edgeTemp = { 
+                        temp_min: weatherCurrent.temp_min, 
+                        temp_max: weatherCurrent.temp_max
+                    };
+                    description = truncateText(weatherCurrent.resumo, 50);
+                }
+                
+                let elemDivCurrentTemp = document.createElement("div");
+                elemDivCurrentTemp.style.top = (160 + ((i - 1) * 220)) + 'px';
+                elemDivCurrentTemp.className = 'newsWeek newsWeekTemp';
+                elemDivCurrentTemp.innerHTML = currentDate.slice(0, 5) + 
+                "&nbsp;-&nbsp;<span style='color:#26b6d5'>MIN " + edgeTemp.temp_min + "°</span> -" +
+                "&nbsp;<span style='color:#ee3535'>MAX " + edgeTemp.temp_max + "°</span>";
+
+                let elemDivCurrentDesc = document.createElement("div");
+                elemDivCurrentDesc.style.top = (270 + ((i - 1) * 220)) + 'px';
+                elemDivCurrentDesc.textContent = description;
+                elemDivCurrentDesc.style.paddingLeft = '20px';
+                elemDivCurrentDesc.className = 'newsWeek newsWeekDescription';
+
+                elemDiv.appendChild(elemDivCurrentTemp);
+                elemDiv.appendChild(elemDivCurrentDesc);
+            }
         }
 
         slideCount++;
@@ -174,6 +200,13 @@ function getEdgeTemperaturesForDay(data) {
         temp_min: Math.min.apply(null, minTempList),
         temp_max: Math.max.apply(null, maxTempList) 
     };
+}
+
+function truncateText(text, maxSize) {
+    if (text.length <= maxSize)
+        return text;
+    else
+        return text.slice(0, maxSize) + '...';
 }
 
 function randomNumber() {
@@ -247,7 +280,7 @@ function weatherExpired(timestamp) {
 
 function getConfig() {
     return {
-        "speed": 10,
+        "speed": 60,
         "slides": [
             {
                 "type": "image",
@@ -262,17 +295,13 @@ function getConfig() {
                 "bgImage": "spa_pes.png"
             },
             {
-                "type": "weather_week",
-                "bgImage": "clima_semana_imagem.png"
-            },
-            {
                 "type": "image",
                 "bgImage": "alongamento_cilios.png"
             },
-            // {
-            //     "type": "news",
-            //     "bgImage": "noticias_imagem.png"
-            // },
+            {
+                "type": "news",
+                "bgImage": "noticias_imagem.png"
+            },
             {
                 "type": "image",
                 "bgImage": "bioseguranca.png"
@@ -281,10 +310,10 @@ function getConfig() {
                 "type": "image",
                 "bgImage": "fibra_vidro.png"
             },
-            // {
-            //     "type": "news",
-            //     "bgImage": "noticias_imagem.png"
-            // },
+            {
+                "type": "news",
+                "bgImage": "noticias_imagem.png"
+            },
             {
                 "type": "image",
                 "bgImage": "base_fortalecedora.png"
@@ -293,54 +322,58 @@ function getConfig() {
                 "type": "image",
                 "bgImage": "brow_lamination.png"
             },
-            // {
-            //     "type": "news",
-            //     "bgImage": "noticias_imagem.png"
-            // },
+            {
+                "type": "news",
+                "bgImage": "noticias_imagem.png"
+            },
             {
                 "type": "image",
                 "bgImage": "promocoes.png"
             },
-            // {
-            //     "type": "image",
-            //     "bgImage": "drenagem_linfatica.png"
-            // },
-            // {
-            //     "type": "news",
-            //     "bgImage": "noticias_imagem.png"
-            // },
-            // {
-            //     "type": "image",
-            //     "bgImage": "site.png"
-            // },
-            // {
-            //     "type": "image",
-            //     "bgImage": "design_sobrancelha.png"
-            // },
-            // {
-            //     "type": "news",
-            //     "bgImage": "noticias_imagem.png"
-            // },
-            // {
-            //     "type": "image",
-            //     "bgImage": "giftvoucher.png"
-            // },
-            // {
-            //     "type": "image",
-            //     "bgImage": "depilacao_cera.png"
-            // },
-            // {
-            //     "type": "news",
-            //     "bgImage": "noticias_imagem.png"
-            // },
-            // {
-            //     "type": "image",
-            //     "bgImage": "esmaltacao_gel.png"
-            // },
-            // {
-            //     "type": "image",
-            //     "bgImage": "lash_lifting.png"
-            // }
+            {
+                "type": "weather_week",
+                "bgImage": "clima_semana_imagem.jpg"
+            },
+            {
+                "type": "image",
+                "bgImage": "drenagem_linfatica.png"
+            },
+            {
+                "type": "news",
+                "bgImage": "noticias_imagem.png"
+            },
+            {
+                "type": "image",
+                "bgImage": "site.png"
+            },
+            {
+                "type": "image",
+                "bgImage": "design_sobrancelha.png"
+            },
+            {
+                "type": "news",
+                "bgImage": "noticias_imagem.png"
+            },
+            {
+                "type": "image",
+                "bgImage": "giftvoucher.png"
+            },
+            {
+                "type": "image",
+                "bgImage": "depilacao_cera.png"
+            },
+            {
+                "type": "news",
+                "bgImage": "noticias_imagem.png"
+            },
+            {
+                "type": "image",
+                "bgImage": "esmaltacao_gel.png"
+            },
+            {
+                "type": "image",
+                "bgImage": "lash_lifting.png"
+            }
         ]
     };
 }
