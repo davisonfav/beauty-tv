@@ -284,18 +284,6 @@ function getConfig() {
         "slides": [
             {
                 "type": "image",
-                "bgImage": "avalie_google.png"
-            },
-            {
-                "type": "weather",
-                "bgImage": "clima_imagem.jpg"
-            },
-            {
-                "type": "image",
-                "bgImage": "spa_pes.png"
-            },
-            {
-                "type": "image",
                 "bgImage": "alongamento_cilios.png"
             },
             {
@@ -307,6 +295,10 @@ function getConfig() {
                 "bgImage": "bioseguranca.png"
             },
             {
+                "type": "weather",
+                "bgImage": "clima_imagem.png"
+            },
+            {
                 "type": "image",
                 "bgImage": "fibra_vidro.png"
             },
@@ -316,64 +308,28 @@ function getConfig() {
             },
             {
                 "type": "image",
-                "bgImage": "base_fortalecedora.png"
-            },
-            {
-                "type": "image",
                 "bgImage": "brow_lamination.png"
             },
             {
-                "type": "news",
-                "bgImage": "noticias_imagem.png"
-            },
-            {
-                "type": "image",
-                "bgImage": "promocoes.png"
-            },
-            {
                 "type": "weather_week",
-                "bgImage": "clima_semana_imagem.jpg"
-            },
-            {
-                "type": "image",
-                "bgImage": "drenagem_linfatica.png"
-            },
-            {
-                "type": "news",
-                "bgImage": "noticias_imagem.png"
-            },
-            {
-                "type": "image",
-                "bgImage": "site.png"
-            },
-            {
-                "type": "image",
-                "bgImage": "design_sobrancelha.png"
-            },
-            {
-                "type": "news",
-                "bgImage": "noticias_imagem.png"
-            },
-            {
-                "type": "image",
-                "bgImage": "giftvoucher.png"
-            },
-            {
-                "type": "image",
-                "bgImage": "depilacao_cera.png"
-            },
-            {
-                "type": "news",
-                "bgImage": "noticias_imagem.png"
+                "bgImage": "clima_semana_imagem.png"
             },
             {
                 "type": "image",
                 "bgImage": "esmaltacao_gel.png"
             },
             {
+                "type": "news",
+                "bgImage": "noticias_imagem.png"
+            },
+            {
                 "type": "image",
                 "bgImage": "lash_lifting.png"
-            }
+            },
+            {
+                "type": "news",
+                "bgImage": "noticias_imagem.png"
+            },
         ]
     };
 }
